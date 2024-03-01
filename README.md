@@ -6,9 +6,14 @@ Python RazorIMU class designed for reading data via Serial communication, with a
 
 ## Methods
 `RazorIMU( [config_path] )` - Constructor for RazorIMU, configures board and writes calibration values provided in `config_path.yaml` file.
+
 `start()` - starts polling the data from Serial, can call as soon as created RazorIMU object.
+
 `shutdown()` - stops the polling, not mendatory, but please shutdown the IMU when done. 
+
 `run_thread()` - returns most recent recived data from IMU in as a list `[accel.x, accel.y, accel.z, gyro.x, gyro.y, gyro.z, temp]`.
+
+
 \* *No need to use any other methods, those are enough for full use, see example code in in `__main__` section at bottom of `imu.py`*
 
 ---
