@@ -18,21 +18,27 @@ Python RazorIMU class designed for reading data via Serial communication, with a
 
 ---
 
+## Data
+`accel[<axis>]` - linear acceleratio across `<axis>` in $m/s^2$
+
+`gyro[<axis>]` - angular velocity across `<axis>` in $rad/s$
+
+---
+
 ## Features
 - Multithreading on update.
 - Reading config files (example attached).
 - Writing callibration values.
+- Unit conversion
 
 ---
 
 ## TODO
-- Unit conversions.
 - Test implementation.
 - Test calibration writing.
 
 ---
 
 ## Notes
-Currently class doesn't apply any conversion to the values, so it gives RAW DATA (aka. gravity is around -250 $units/s^2$).
-Also be carreffuly after calling `start()` with interval of few seconds after creating `RazorIMU` object, Due to the way how serial read works, `tty*` might build up ~8k of data over the interval betwenn construction and start of the thread.
+Be carreffuly after calling `start()` with interval of few seconds after creating `RazorIMU` object, Due to the way how serial read works, `tty*` might build up ~8k of data over the interval betwenn construction and start of the thread.
 It shouldn't cause any issues, since dumping will be automatic and as quick as your executing device lets it, and as soon as it catches up with current data will work as intended. 
