@@ -1,4 +1,5 @@
 
+import math
 import time
 import serial
 import yaml
@@ -11,9 +12,18 @@ class RazorIMU():
     def __init__(self, config_path=None):
         self.on = False
         self.has_config = False
+
         self.config = None
         self.port = DEFAULT_PORT
         self.boundrate = DEFAULT_BOUNDRATE
+
+        self.accel = { 'x' : 0., 'y' : 0., 'z' : 0. }
+        self.gyro = { 'x' : 0., 'y' : 0., 'z' : 0. }
+        self.mag = {'x': 0., 'y': 0., 'z': 0.}
+        self.temp = None
+
+        self.accelC = (9.81) / (256)
+        self.gyroC = 1
 
         try:
             with open(config_path, "r") as yamlfile:
@@ -24,16 +34,13 @@ class RazorIMU():
         except:
             print("[WARN]: No config file. Setting defalut variables")
 
-        self.accel = { 'x' : 0., 'y' : 0., 'z' : 0. }
-        self.gyro = { 'x' : 0., 'y' : 0., 'z' : 0. }
-        self.mag = {'x': 0., 'y': 0., 'z': 0.}
-        self.temp = None
-
         try:
             self.ser_ = serial.Serial(port=self.port, baudrate=self.boundrate, timeout=1)
             print("[INFO]: Connection: OK")
             self.ser_.write(('#o0').encode("utf-8"))
-            discard = self.ser_.readline() # Flushing output
+
+            # Flushing output
+            discard = self.ser_.readline() 
 
             self.ser_.write(('#ox').encode("utf-8"))
             if self.has_config:
@@ -61,7 +68,7 @@ class RazorIMU():
         except:
             print("[ERRO]: Couldn't connect to Serial")
             self.mainThread = threading.Thread(target=lambda: print("[WARN]: Serial not connected!"))
-    
+         
     def update(self):
         while(self.on):
             self.poll()
@@ -71,8 +78,16 @@ class RazorIMU():
             line = bytearray(self.ser_.readline()).decode("utf-8")
             line = line.split('=')[1]
             values = [float(val) for val in line.split(',')]
-            self.accel = { 'x' : values[3], 'y' : values[4], 'z' : values[5]}
-            self.gyro = { 'x' : values[6], 'y' : values[7], 'z' : values[8]}
+
+            # Converts to m/s^2
+            self.accel['x'] = values[3] * self.accelC
+            self.accel['y'] = values[4] * self.accelC
+            self.accel['z'] = values[5] * self.accelC
+
+            # Converst to rad/s
+            self.gyro['x'] = values[6] * self.gyroC
+            self.gyro['y'] = values[7] * self.gyroC
+            self.gyro['z'] = values[8] * self.gyroC
         except:
             print("[WARN]: Can't read data")
     
@@ -98,7 +113,9 @@ class RazorIMU():
 if __name__ == "__main__":
     razor_imu = RazorIMU('razor.yaml')
     razor_imu.start()
-    time.sleep(5)
-    print(str(razor_imu.accel['x']))
+    time.sleep(2)
+    for t in range(1,20):
+        print(str(razor_imu.accel['x']))
+        time.sleep(0.2)
     razor_imu.shutdown()
     print("All Good!")
