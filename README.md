@@ -33,6 +33,11 @@ Python RazorIMU class designed for reading data via Serial communication, with a
 
 ---
 
+## Firmwares
+Folder `firmwares` should include some common of the IMU sensors avaliable.
+
+---
+
 ## TODO
 - Test implementation.
 - Test calibration writing.
