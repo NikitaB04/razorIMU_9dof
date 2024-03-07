@@ -14,6 +14,8 @@ float angVel[] = {0.f, 0.f, 0.f};
 float angPose[] = {0.f, 0.f, 0.f};
 float linAcel[] = {0.f, 0.f, 0.f};
 
+bool output_yprag = true;
+
 void setup() {
     Serial.begin(57600);
     while (!Serial);
@@ -68,12 +70,39 @@ void readAcel() {
     linAcel[2] = z;
 }
 
+// Blocks until another byte is available on serial port
+char readChar()
+{
+  while (Serial.available() < 1) { }
+  return Serial.read();
+}
+
+void readCommands() {
+  if (Serial.available() >= 2) {
+    if (Serial.read() == '#') {
+      int command = Serial.read();
+      if (command == 'o') {
+        char output_type = readChar();
+        if (output_type == '0') {
+          output_yprag = false;
+        } else if (output_type == '1') {
+          output_yprag = true;
+        }
+      }
+    }
+  }
+}
+
 void loop() {
+    readCommands();
+
     readOrin();
     readGyro();
     readAcel();
 
-    printAll(angPose, linAcel, angVel);
+    if (output_yprag) {
+      printAll(angPose, linAcel, angVel);
+    }
 
     delay(UPDATE_RATE);
 }
