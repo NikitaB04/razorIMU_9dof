@@ -1,7 +1,21 @@
+####                                     ####
+# Use this file as an example to fill
+# up the information about the IMU
+# you are using.
+# This specific .yaml includes example
+# values needed to config SparkFun Razor
+####                                     ####
+
 #### Serial Configuraton ####
 Serial:
   port: "/dev/ttyUSB0"
   boundrate: 57600
+
+#### Units Configuraton ####
+Units:
+  orin_scale: 1
+  acel_scale: 0.0383203
+  gyro_scale: 1
 
 #### Calibration Configuraton ####
 Calib:

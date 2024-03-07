@@ -15,25 +15,13 @@ float angPose[] = {0.f, 0.f, 0.f};
 float linAcel[] = {0.f, 0.f, 0.f};
 
 void setup() {
-    // put your setup code here, to run once:
     Serial.begin(57600);
     while (!Serial);
-    //Call .begin() to configure the IMUs
     if (myIMU.begin() != 0) {
         Serial.println("Device error");
     } else {
         Serial.println("Device OK!");
     }
-}
-
-float vector_2_rad(float x, float y) {
-    float angle = atan2 (y, x);
-    return angle;
-}
-
-float rad_2_deg(float rad) {
-    float deg = rad * 180.f/PI;
-    return deg;
 }
 
 void printAll(float gyro[], float acel[], float rot[]) {
@@ -50,23 +38,19 @@ void printAll(float gyro[], float acel[], float rot[]) {
   Serial.print(rot[0]); Serial.print(",");
   Serial.print(rot[1]); Serial.print(",");
   Serial.print(rot[2]); Serial.println();
+}
 
-    // Serial.print("X: ");Serial.println(gyro[0]);
-    // Serial.print("Y: ");Serial.println(gyro[1]);
-    // Serial.print("Z: ");Serial.println(gyro[2]);
+void readOrin() {
+    angPose[0] = angPose[0] + ( (myIMU.readFloatGyroX() + AXIS_DRIFT[0]) / 1000) * UPDATE_RATE;
+    angPose[1] = angPose[1] + ( (myIMU.readFloatGyroY() + AXIS_DRIFT[1]) / 1000) * UPDATE_RATE;
+    angPose[2] = angPose[2] + ( (myIMU.readFloatGyroZ() + AXIS_DRIFT[2]) / 1000) * UPDATE_RATE;
 }
 
 void readGyro() {
     float x,y,z;
-    x = myIMU.readFloatAccelX();
-    y = myIMU.readFloatAccelY();
-    z = myIMU.readFloatAccelZ();
-
-    // angPose[0] = rad_2_deg(vector_2_rad(y,z));
-    // angPose[1] = rad_2_deg(vector_2_rad(x,z));
-    angPose[0] = angPose[0] + ( (myIMU.readFloatGyroX() + AXIS_DRIFT[0]) / 1000) * UPDATE_RATE;
-    angPose[1] = angPose[1] + ( (myIMU.readFloatGyroY() + AXIS_DRIFT[1]) / 1000) * UPDATE_RATE;
-    angPose[2] = angPose[2] + ( (myIMU.readFloatGyroZ() + AXIS_DRIFT[2]) / 1000) * UPDATE_RATE;
+    x = myIMU.readFloatGyroX();
+    y = myIMU.readFloatGyroY();
+    z = myIMU.readFloatGyroZ();
 
     angVel[0] = x;
     angVel[1] = y;
@@ -85,6 +69,7 @@ void readAcel() {
 }
 
 void loop() {
+    readOrin();
     readGyro();
     readAcel();
 

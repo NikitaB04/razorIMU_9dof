@@ -5,6 +5,7 @@ import serial
 import yaml
 import threading
 
+# Default acces values if config.yaml not found
 DEFAULT_PORT = "/dev/ttyUSB0"
 DEFAULT_BOUNDRATE = 57600
 
@@ -17,13 +18,14 @@ class RazorIMU():
         self.port = DEFAULT_PORT
         self.boundrate = DEFAULT_BOUNDRATE
 
+        self.orient = {'x': 0., 'y': 0., 'z': 0.}
         self.accel = { 'x' : 0., 'y' : 0., 'z' : 0. }
         self.gyro = { 'x' : 0., 'y' : 0., 'z' : 0. }
-        self.mag = {'x': 0., 'y': 0., 'z': 0.}
         self.temp = None
 
-        self.accelC = (9.81) / (256)
-        self.gyroC = 1
+        self.orin_scale = 1
+        self.acel_scale = 1
+        self.gyro_scale = 1
 
         try:
             with open(config_path, "r") as yamlfile:
@@ -62,6 +64,11 @@ class RazorIMU():
                 self.ser_.write(('#cgx' + str(self.config['Calib']['gyro_average_offset_x'])).encode("utf-8"))
                 self.ser_.write(('#cgy' + str(self.config['Calib']['gyro_average_offset_y'])).encode("utf-8"))
                 self.ser_.write(('#cgz' + str(self.config['Calib']['gyro_average_offset_z'])).encode("utf-8"))
+
+                self.orientC = self.config['Units']['orin_scale']
+                self.accelC = self.config['Units']['acel_scale']
+                self.gyroC = self.config['Units']['gyro_scale']
+
             self.ser_.write(('#o1').encode("utf-8"))   
             print("[INFO]: Good to go!")
             self.mainThread = threading.Thread(target=self.update)
@@ -78,6 +85,11 @@ class RazorIMU():
             line = bytearray(self.ser_.readline()).decode("utf-8")
             line = line.split('=')[1]
             values = [float(val) for val in line.split(',')]
+            
+            # Converts to rad
+            self.orient['x'] = values[0] * self.orientC
+            self.orient['y'] = values[1] * self.orientC
+            self.orient['z'] = values[2] * self.orientC
 
             # Converts to m/s^2
             self.accel['x'] = values[3] * self.accelC
