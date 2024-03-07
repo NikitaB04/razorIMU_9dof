@@ -121,7 +121,11 @@ class RazorIMU():
         self.on = False
         self.mainThread.join()
 
-    
+
+# EXAMPLE
+# Just and example of how RazorIMU can be used
+# Remove that method during actuall implimentation
+
 if __name__ == "__main__":
     razor_imu = RazorIMU('razor.yaml')
     razor_imu.start()
