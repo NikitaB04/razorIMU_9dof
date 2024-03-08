@@ -8,6 +8,7 @@ import threading
 # Default acces values if config.yaml not found
 DEFAULT_PORT = "/dev/ttyUSB0"
 DEFAULT_BOUNDRATE = 57600
+DEFAULT_BOOT_TME = 2
 
 class RazorIMU():
     def __init__(self, config_path=None):
@@ -17,6 +18,7 @@ class RazorIMU():
         self.config = None
         self.port = DEFAULT_PORT
         self.boundrate = DEFAULT_BOUNDRATE
+        self.boot_time = DEFAULT_BOOT_TME
 
         self.orient = {'x': 0., 'y': 0., 'z': 0.}
         self.accel = { 'x' : 0., 'y' : 0., 'z' : 0. }
@@ -33,6 +35,9 @@ class RazorIMU():
                 print("[INFO]: Got config file!")
                 self.has_config = True
                 self.config = data
+                self.port = self.config['Serial']['port']
+                self.boundrate = self.config['Serial']['boundrate']
+                self.boot_time = self.config['Serial']['boot_time']
         except:
             print("[WARN]: No config file. Setting defalut variables")
 
@@ -72,6 +77,7 @@ class RazorIMU():
             self.ser_.write(('#o1').encode("utf-8"))   
             print("[INFO]: Good to go!")
             self.mainThread = threading.Thread(target=self.update)
+            time.sleep(self.boot_time)
         except:
             print("[ERRO]: Couldn't connect to Serial")
             self.mainThread = threading.Thread(target=lambda: print("[WARN]: Serial not connected!"))

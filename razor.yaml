@@ -8,8 +8,9 @@
 
 #### Serial Configuraton ####
 Serial:
-  port: "/dev/ttyUSB0"
+  port: "/dev/ttyACM0"
   boundrate: 57600
+  boot_time: 2
 
 #### Units Configuraton ####
 Units:
