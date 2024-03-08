@@ -1,9 +1,10 @@
-
-import math
 import time
 import serial
 import yaml
 import threading
+
+from config_ref import *
+from config_writer import ConfigWriter
 
 # Default acces values if config.yaml not found
 DEFAULT_PORT = "/dev/ttyUSB0"
@@ -29,53 +30,36 @@ class RazorIMU():
         self.acel_scale = 1
         self.gyro_scale = 1
 
+
         try:
             with open(config_path, "r") as yamlfile:
                 data = yaml.load(yamlfile, Loader=yaml.FullLoader)
                 print("[INFO]: Got config file!")
                 self.has_config = True
                 self.config = data
-                self.port = self.config['Serial']['port']
-                self.boundrate = self.config['Serial']['boundrate']
-                self.boot_time = self.config['Serial']['boot_time']
+                self.port = self.config[SerialRef.SERIAL.value][SerialRef.PORT.value]
+                self.boundrate = self.config[SerialRef.SERIAL.value][SerialRef.BOUNDRATE.value]
+                self.boot_time = self.config[SerialRef.SERIAL.value][SerialRef.BOOT_TIME.value]
+                self.orin_scale = self.config[UnitRef.UNITS.value][UnitRef.ORIN_SCALE.value]
+                self.acel_scale = self.config[UnitRef.UNITS.value][UnitRef.ACEL_SCALE.value]
+                self.gyro_scale = self.config[UnitRef.UNITS.value][UnitRef.GYRO_SCALE.value]
         except:
             print("[WARN]: No config file. Setting defalut variables")
 
         try:
             self.ser_ = serial.Serial(port=self.port, baudrate=self.boundrate, timeout=1)
             print("[INFO]: Connection: OK")
-            self.ser_.write(('#o0').encode("utf-8"))
+            self.ser_.write((GeneralCmdRef.STOP_POST.value).encode(EncodingFormat.UTF_8.value))
 
             # Flushing output
             discard = self.ser_.readline() 
 
-            self.ser_.write(('#ox').encode("utf-8"))
             if self.has_config:
-                print("[INFO]: Writing calibration data...")
-                self.ser_.write(('#caxm' + str(self.config['Calib']['accel_x_min'])).encode("utf-8"))
-                self.ser_.write(('#caxM' + str(self.config['Calib']['accel_x_max'])).encode("utf-8"))
-                self.ser_.write(('#caym' + str(self.config['Calib']['accel_y_min'])).encode("utf-8"))
-                self.ser_.write(('#cayM' + str(self.config['Calib']['accel_y_max'])).encode("utf-8"))
-                self.ser_.write(('#cazm' + str(self.config['Calib']['accel_z_min'])).encode("utf-8"))
-                self.ser_.write(('#cazM' + str(self.config['Calib']['accel_z_max'])).encode("utf-8"))
+                ConfigWriter(self.ser_, self.config)
 
-                self.ser_.write(('#cmxm' + str(self.config['Calib']['magn_x_min'])).encode("utf-8"))
-                self.ser_.write(('#cmxM' + str(self.config['Calib']['magn_x_max'])).encode("utf-8"))
-                self.ser_.write(('#cmym' + str(self.config['Calib']['magn_y_min'])).encode("utf-8"))
-                self.ser_.write(('#cmyM' + str(self.config['Calib']['magn_y_max'])).encode("utf-8"))
-                self.ser_.write(('#cmzm' + str(self.config['Calib']['magn_z_min'])).encode("utf-8"))
-                self.ser_.write(('#cmzM' + str(self.config['Calib']['magn_z_max'])).encode("utf-8"))
-        
-                self.ser_.write(('#cgx' + str(self.config['Calib']['gyro_average_offset_x'])).encode("utf-8"))
-                self.ser_.write(('#cgy' + str(self.config['Calib']['gyro_average_offset_y'])).encode("utf-8"))
-                self.ser_.write(('#cgz' + str(self.config['Calib']['gyro_average_offset_z'])).encode("utf-8"))
+            self.ser_.write((GeneralCmdRef.OUTPUT_FORMAT.value).encode(EncodingFormat.UTF_8.value))
+            self.ser_.write((GeneralCmdRef.START_POST.value).encode(EncodingFormat.UTF_8.value))   
 
-                self.orientC = self.config['Units']['orin_scale']
-                self.accelC = self.config['Units']['acel_scale']
-                self.gyroC = self.config['Units']['gyro_scale']
-
-            self.ser_.write(('#o1').encode("utf-8"))   
-            print("[INFO]: Good to go!")
             self.mainThread = threading.Thread(target=self.update)
             time.sleep(self.boot_time)
         except:
@@ -88,24 +72,24 @@ class RazorIMU():
     
     def poll(self):
         try:
-            line = bytearray(self.ser_.readline()).decode("utf-8")
+            line = bytearray(self.ser_.readline()).decode(EncodingFormat.UTF_8.value)
             line = line.split('=')[1]
             values = [float(val) for val in line.split(',')]
             
             # Converts to rad
-            self.orient['x'] = values[0] * self.orientC
-            self.orient['y'] = values[1] * self.orientC
-            self.orient['z'] = values[2] * self.orientC
+            self.orient['x'] = values[0] * self.orin_scale
+            self.orient['y'] = values[1] * self.orin_scale
+            self.orient['z'] = values[2] * self.orin_scale
 
             # Converts to m/s^2
-            self.accel['x'] = values[3] * self.accelC
-            self.accel['y'] = values[4] * self.accelC
-            self.accel['z'] = values[5] * self.accelC
+            self.accel['x'] = values[3] * self.acel_scale
+            self.accel['y'] = values[4] * self.acel_scale
+            self.accel['z'] = values[5] * self.acel_scale
 
             # Converst to rad/s
-            self.gyro['x'] = values[6] * self.gyroC
-            self.gyro['y'] = values[7] * self.gyroC
-            self.gyro['z'] = values[8] * self.gyroC
+            self.gyro['x'] = values[6] * self.gyro_scale
+            self.gyro['y'] = values[7] * self.gyro_scale
+            self.gyro['z'] = values[8] * self.gyro_scale
         except:
             print("[WARN]: Can't read data")
     

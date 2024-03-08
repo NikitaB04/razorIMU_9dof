@@ -8,6 +8,7 @@
 
 #### Serial Configuraton ####
 Serial:
+  device: "SparkFunRazor"
   port: "/dev/ttyACM0"
   boundrate: 57600
   boot_time: 2
@@ -20,23 +21,47 @@ Units:
 
 #### Calibration Configuraton ####
 Calib:
-  ### accelerometer
-  accel_x_min: -250.0
-  accel_x_max: 250.0
-  accel_y_min: -250.0
-  accel_y_max: 250.0
-  accel_z_min: -250.0
-  accel_z_max: 250.0
+  SparkFunRazor:
+    Val: 
+      ### accelerometer
+      accel_x_min: -250.0
+      accel_x_max: 250.0
+      accel_y_min: -250.0
+      accel_y_max: 250.0
+      accel_z_min: -250.0
+      accel_z_max: 250.0
 
-  ### magnetometer
-  magn_x_min: -600.0
-  magn_x_max: 600.0
-  magn_y_min: -600.0
-  magn_y_max: 600.0
-  magn_z_min: -600.0
-  magn_z_max: 600.0
+      ### magnetometer
+      magn_x_min: -600.0
+      magn_x_max: 600.0
+      magn_y_min: -600.0
+      magn_y_max: 600.0
+      magn_z_min: -600.0
+      magn_z_max: 600.0
 
-  ### gyroscope
-  gyro_average_offset_x: 0.0
-  gyro_average_offset_y: 0.0
-  gyro_average_offset_z: 0.0
+      ### gyroscope
+      gyro_average_offset_x: 0.0
+      gyro_average_offset_y: 0.0
+      gyro_average_offset_z: 0.0
+
+    Cmd:
+    ### accelerometer
+      accel_x_min: '#caxm'
+      accel_x_max: '#caxM'
+      accel_y_min: '#caym'
+      accel_y_max: '#cayM'
+      accel_z_min: '#cazm'
+      accel_z_max: '#cazM'
+
+      ### magnetometer
+      magn_x_min: '#cmxm'
+      magn_x_max: '#cmxM'
+      magn_y_min: '#cmym'
+      magn_y_max: '#cmyM'
+      magn_z_min: '#cmzm'
+      magn_z_max: '#cmzM'
+
+      ### gyroscope
+      gyro_average_offset_x: '#cgx'
+      gyro_average_offset_y: '#cgy'
+      gyro_average_offset_z: '#cgz'
