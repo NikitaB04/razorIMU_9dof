@@ -72,7 +72,7 @@ Folder `firmwares` should include some common of the IMU sensors avaliable.
 
 **SeeedXIAO**
 - Test firmware for [SeeedXIAO](https://www.seeedstudio.com/xiao-series-page) board to work as an IMU sensor.
-- Calibration information can be found in SeeedXIAO firmware folder.
+- Calibration instruction can be found in [SeeedXIAO firmware folder](firmwares/SeedXiaoIMU/how_to_calibrate.md).
 
 ---
 
