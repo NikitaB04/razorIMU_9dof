@@ -33,7 +33,7 @@ Upload firmware to the Seeed XIAO board, boot it and leave it in stale position.
 Record initial value of axis, and rotate device over the axis for exactly 90 deg. (Or what ever units you prefere). This is our **desired angle**.
 
 Record resulting value on that axis. This is our **actual angle**.
-Then to find `AXIS_SCALE` for each axis calculate $scale = \frac{desired_angle}{actual_angle}$.
+Then to find `AXIS_SCALE` for each axis calculate $scale = \frac{desiredAngle}{actualAngle}$.
 Repeat for every axis. 
 
 Write down resulting value in configuration `.yaml` file.
