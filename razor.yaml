@@ -8,7 +8,7 @@
 
 #### Serial Configuraton ####
 Serial:
-  device: "SparkFunRazor"
+  device: "SeeedXIAO"
   port: "/dev/ttyACM0"
   boundrate: 57600
   boot_time: 2
@@ -65,3 +65,9 @@ Calib:
       gyro_average_offset_x: '#cgx'
       gyro_average_offset_y: '#cgy'
       gyro_average_offset_z: '#cgz'
+  
+  SeeedXIAO:
+    Val:
+      x: 1
+    Cmd:
+      x: '#xq'

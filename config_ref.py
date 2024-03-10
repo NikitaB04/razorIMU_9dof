@@ -1,10 +1,6 @@
 
 from enum import Enum
 
-class SupportedDevices(Enum):
-    RAZOR = 'SparkFunRazor'
-    SEEED = 'SeeedXIAO'
-
 class SerialRef(Enum):
     SERIAL = 'Serial'
     DEVICE = 'device'
