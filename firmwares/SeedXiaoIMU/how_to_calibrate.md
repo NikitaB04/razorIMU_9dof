@@ -17,12 +17,12 @@ Ex.
   20:11:55.076 -> #YPRAG=54.97,203.49,286.26,-0.00,-0.99,0.18,0.84,-2.17,-0.14
   ```
 
-  Here we have `8` iterations and `first/last` values for: 
+  Here we have `8` **iterations** and `first/last` values for: 
   - `X`: `54.97/54.97`
   - `Y`: `203.44/203.49`
   - `Z`: `286.21/286.21`
 
-Then to find `AXIS_DRIFT` for each axis calculate $drift = \frac{final-initial}{#iterations}$.
+Then to find `AXIS_DRIFT` for each axis calculate $drift = \frac{final-initial}{iterations}$.
 Repeat for every axis. 
 
 Write down resulting value in configuration `.yaml` file.
