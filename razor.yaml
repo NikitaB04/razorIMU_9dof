@@ -8,7 +8,7 @@
 
 #### Serial Configuraton ####
 Serial:
-  device: "SeeedXIAO"
+  device: "SparkFunRazor"
   port: "/dev/ttyACM0"
   boundrate: 57600
   boot_time: 2
@@ -25,19 +25,19 @@ Calib:
     Val: 
       ### accelerometer
       accel_x_min: -250.0
-      accel_x_max: 250.0
+      accel_x_max:  250.0
       accel_y_min: -250.0
-      accel_y_max: 250.0
+      accel_y_max:  250.0
       accel_z_min: -250.0
-      accel_z_max: 250.0
+      accel_z_max:  250.0
 
       ### magnetometer
       magn_x_min: -600.0
-      magn_x_max: 600.0
+      magn_x_max:  600.0
       magn_y_min: -600.0
-      magn_y_max: 600.0
+      magn_y_max:  600.0
       magn_z_min: -600.0
-      magn_z_max: 600.0
+      magn_z_max:  600.0
 
       ### gyroscope
       gyro_average_offset_x: 0.0
@@ -68,6 +68,30 @@ Calib:
   
   SeeedXIAO:
     Val:
-      x: 1
+      ### gyro constant drift
+      axis_drift_x: -0.9286
+      axis_drift_y:  2.5988
+      axis_drift_z:  0.4872
+
+      ### gyro value scaling
+      axis_scale_x:  1.268
+      axis_scale_y:  1.286
+      axis_scale_z:  1.267 
+
+      ### serial post rate
+      updates_rate:  20
+
     Cmd:
-      x: '#xq'
+      ### gyro constant drift
+      axis_drift_x: '#cdx'
+      axis_drift_y: '#cdy'
+      axis_drift_z: '#cdz'
+
+      ### gyro value scaling
+      axis_scale_x: '#csx'
+      axis_scale_y: '#csy'
+      axis_scale_z: '#csz' 
+
+      ### serial post rate
+      updates_rate: '#cu'
+      

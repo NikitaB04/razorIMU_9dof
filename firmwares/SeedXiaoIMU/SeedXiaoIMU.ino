@@ -6,9 +6,9 @@
 //Create a instance of class LSM6DS3
 LSM6DS3 myIMU(I2C_MODE, 0x6A);    //I2C device address 0x6A
 
-const int UPDATE_RATE = 20;
-const float AXIS_DRIFT[] = {-0.9286f, 2.5988f, 0.48727f};
-const float AXIS_SCALAR[] = {1.268f, 1.286f, 1.267f};
+int UPDATE_RATE = 20;
+float AXIS_DRIFT[] = {0.f, 0.f, 0.f};
+float AXIS_SCALAR[] = {1.f, 1.f, 1.f};
 
 float angVel[] = {0.f, 0.f, 0.f};
 float angPose[] = {0.f, 0.f, 0.f};
@@ -87,6 +87,42 @@ void readCommands() {
           output_yprag = false;
         } else if (output_type == '1') {
           output_yprag = true;
+        }
+      } else
+
+      if (command == 'c') {
+        char type_param = readChar();
+
+        if (type_param == 'd') {
+          char axis_param = readChar();
+          float value_param = Serial.parseFloat();
+          if (axis_param == 'x') {
+            AXIS_DRIFT[0] = value_param;
+          } else
+          if (axis_param == 'y') {
+            AXIS_DRIFT[1] = value_param;
+          } else
+          if (axis_param == 'z') {
+            AXIS_DRIFT[2] = value_param;
+          }
+        } else
+
+        if (type_param == 's') {
+          char axis_param = readChar();
+          float value_param = Serial.parseFloat();
+          if (axis_param == 'x') {
+            AXIS_SCALAR[0] = value_param;
+          } else
+          if (axis_param == 'y') {
+            AXIS_SCALAR[1] = value_param;
+          } else
+          if (axis_param == 'z') {
+            AXIS_SCALAR[2] = value_param;
+          }
+        } else
+        
+        if (type_param == 'u') {
+          UPDATE_RATE = Serial.parseInt();
         }
       }
     }
