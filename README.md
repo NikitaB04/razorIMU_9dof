@@ -11,25 +11,55 @@ Python RazorIMU class designed for reading data via Serial communication, with a
 
 `shutdown()` - stops the polling, not mendatory, but please shutdown the IMU when done. 
 
-`run_thread()` - returns most recent recived data from IMU in as a list `[accel.x, accel.y, accel.z, gyro.x, gyro.y, gyro.z, temp]`.
-
-
 \* *No need to use any other methods, those are enough for full use, see example code in in `__main__` section at bottom of `imu.py`*
 
 ---
 
 ## Data
+`orient[<axis>]` - angular orientation of device across `<axis>` in $rad$
+
 `accel[<axis>]` - linear acceleratio across `<axis>` in $m/s^2$
 
 `gyro[<axis>]` - angular velocity across `<axis>` in $rad/s$
 
 ---
 
-## Features
-- Multithreading on update.
-- Reading config files (example attached).
-- Writing callibration values.
-- Unit conversion
+## Configuration File
+Overview of how to properly setup a configuration file.
+
+#### Serial
+`device` - name of device to be connected, must match with `Calib` name for proper execution of calibration commands.
+
+`port` - path to serial to which device is connected (ex. `/dev/ttyUSB0`).
+
+`boundrate` - boundrate of device.
+
+`boot_time` - amount of time before device execution starts after boot beyond regular boot time, extra to ensure proper load of calibration values.
+
+#### Units
+`orin_scale/acel_scale/gyro_scale` - unit conversion constant, in case if firmware uses differnt units from expected.
+
+#### Calib
+A section which defines set of commands to set up calibration parameters to device and it's values.
+Follow the template to create your own calibration sequence for device:
+
+```yaml
+DEVICE_NAME:
+  Val:
+    value1: [value to be written]
+    value2: [value to be written]
+    value3: [value to be written]
+  Cmd:
+    value1: [serial command used to write value1]
+    value2: [serial command used to write value2]
+    value3: [serial command used to write value3]
+
+```
+
+\* *Ensure that `DEVICE_NAME` mathes `Serial.device` value, so alibration will use specified calibration sequence.*
+
+
+\* *Ensure that `Val.[your_varible]` and `Cmd.[your_varible]` have same `[your_varible]` name, for propper mapping of commands to written values.*
 
 ---
 
@@ -39,8 +69,7 @@ Folder `firmwares` should include some common of the IMU sensors avaliable.
 ---
 
 ## TODO
-- Test implementation.
-- Test calibration writing.
+- SeeedXIAO calibration commands
 
 ---
 
