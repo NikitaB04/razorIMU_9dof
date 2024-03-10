@@ -66,10 +66,13 @@ DEVICE_NAME:
 ## Firmwares
 Folder `firmwares` should include some common of the IMU sensors avaliable.
 
----
+**SparkFunRazor**
+- Central device which was foundation for the project, firmware used was provided by [Triton-AI](https://github.com/Triton-AI/razor_imu_9dof/tree/Artemis-Log/Razor_AHRS) repository.
+- Calibration information can be found on [ROS Wiki](http://wiki.ros.org/razor_imu_9dof).
 
-## TODO
-- SeeedXIAO calibration commands
+**SeeedXIAO**
+- Test firmware for [SeeedXIAO](https://www.seeedstudio.com/xiao-series-page) board to work as an IMU sensor.
+- Calibration information can be found in SeeedXIAO firmware folder.
 
 ---
 
