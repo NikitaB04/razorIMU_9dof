@@ -8,6 +8,11 @@ class SerialRef(Enum):
     BOUNDRATE = 'boundrate'
     BOOT_TIME = 'boot_time'
 
+class SerialCmd(Enum):
+    READ = 'r'
+    WRITE = 'w'
+    EXECUTE = 'x'
+
 class UnitRef(Enum):
     UNITS = 'Units'
     ORIN_SCALE = 'orin_scale'
@@ -23,6 +28,24 @@ class CalibRef(Enum):
     CALIB = 'Calib'
     VAL = 'Val'
     CMD = 'Cmd'
+
+class YAPRGRef(Enum):
+    HEAD_SEP = '='
+    ELEM_SEP = ','
+    ORIN_X = 0
+    ORIN_Y = 1
+    ORIN_Z = 2
+    ACEL_X = 3
+    ACEL_Y = 4
+    ACEL_Z = 5
+    GYRO_X = 6
+    GYRO_Y = 7
+    GYRO_Z = 8
+
+class AxisRef(Enum):
+    X = 'x'
+    Y = 'y'
+    Z = 'z'
 
 class EncodingFormat(Enum):
     UTF_8 = "utf-8"

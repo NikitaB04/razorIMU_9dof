@@ -17,22 +17,35 @@ class RazorIMU():
         self.has_config = False
 
         self.config = None
+        self.temp = None
+
         self.port = DEFAULT_PORT
         self.boundrate = DEFAULT_BOUNDRATE
         self.boot_time = DEFAULT_BOOT_TME
 
-        self.orient = {'x': 0., 'y': 0., 'z': 0.}
-        self.accel = { 'x' : 0., 'y' : 0., 'z' : 0. }
-        self.gyro = { 'x' : 0., 'y' : 0., 'z' : 0. }
-        self.temp = None
+        self.orient = {
+            AxisRef.X.value : 0., 
+            AxisRef.Y.value : 0., 
+            AxisRef.Z.value : 0.
+            }
+        self.accel = {
+            AxisRef.X.value: 0., 
+            AxisRef.Y.value : 0., 
+            AxisRef.Z.value : 0. 
+            }
+        self.gyro = {
+            AxisRef.X.value : 0., 
+            AxisRef.Y.value : 0., 
+            AxisRef.Z.value : 0. 
+            }
 
-        self.orin_scale = 1
-        self.acel_scale = 1
-        self.gyro_scale = 1
+        self.orin_scale = 1.
+        self.acel_scale = 1.
+        self.gyro_scale = 1.
 
 
         try:
-            with open(config_path, "r") as yamlfile:
+            with open(config_path, SerialCmd.READ.value) as yamlfile:
                 data = yaml.load(yamlfile, Loader=yaml.FullLoader)
                 print("[INFO]: Got config file!")
                 self.has_config = True
@@ -73,33 +86,26 @@ class RazorIMU():
     def poll(self):
         try:
             line = bytearray(self.ser_.readline()).decode(EncodingFormat.UTF_8.value)
-            line = line.split('=')[1]
-            values = [float(val) for val in line.split(',')]
+            line = line.split(YAPRGRef.HEAD_SEP.value)[1] # get's all elements after head
+            values = [float(val) for val in line.split(YAPRGRef.ELEM_SEP.value)]
             
             # Converts to rad
-            self.orient['x'] = values[0] * self.orin_scale
-            self.orient['y'] = values[1] * self.orin_scale
-            self.orient['z'] = values[2] * self.orin_scale
+            self.orient[AxisRef.X.value] = values[YAPRGRef.ORIN_X.value] * self.orin_scale
+            self.orient[AxisRef.Y.value] = values[YAPRGRef.ORIN_Y.value] * self.orin_scale
+            self.orient[AxisRef.Z.value] = values[YAPRGRef.ORIN_Z.value] * self.orin_scale
 
             # Converts to m/s^2
-            self.accel['x'] = values[3] * self.acel_scale
-            self.accel['y'] = values[4] * self.acel_scale
-            self.accel['z'] = values[5] * self.acel_scale
+            self.accel[AxisRef.X.value] = values[YAPRGRef.ACEL_X.value] * self.acel_scale
+            self.accel[AxisRef.Y.value] = values[YAPRGRef.ACEL_Y.value] * self.acel_scale
+            self.accel[AxisRef.Z.value] = values[YAPRGRef.ACEL_Z.value] * self.acel_scale
 
             # Converst to rad/s
-            self.gyro['x'] = values[6] * self.gyro_scale
-            self.gyro['y'] = values[7] * self.gyro_scale
-            self.gyro['z'] = values[8] * self.gyro_scale
+            self.gyro[AxisRef.X.value] = values[YAPRGRef.GYRO_X.value] * self.gyro_scale
+            self.gyro[AxisRef.Y.value] = values[YAPRGRef.GYRO_X.value] * self.gyro_scale
+            self.gyro[AxisRef.Z.value] = values[YAPRGRef.GYRO_X.value] * self.gyro_scale
         except:
             print("[WARN]: Can't read data")
-    
-    def run_thread(self):
-        return self.accel['x'], self.accel['y'], self.accel['z'], self.gyro['x'], self.gyro['y'], self.gyro['z'], self.temp
-    
-    def run(self):
-        self.poll()
-        return self.run_thread()
-
+            
     def start(self):
         if not self.on:
             self.on = True
@@ -121,7 +127,7 @@ if __name__ == "__main__":
     razor_imu.start()
     time.sleep(2)
     for t in range(1,20):
-        print(str(razor_imu.accel['x']))
+        print(str(razor_imu.accel[AxisRef.X.value]))
         time.sleep(0.2)
     razor_imu.shutdown()
     print("All Good!")
