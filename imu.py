@@ -101,8 +101,8 @@ class RazorIMU():
 
             # Converst to rad/s
             self.gyro[AxisRef.X.value] = values[YAPRGRef.GYRO_X.value] * self.gyro_scale
-            self.gyro[AxisRef.Y.value] = values[YAPRGRef.GYRO_X.value] * self.gyro_scale
-            self.gyro[AxisRef.Z.value] = values[YAPRGRef.GYRO_X.value] * self.gyro_scale
+            self.gyro[AxisRef.Y.value] = values[YAPRGRef.GYRO_Y.value] * self.gyro_scale
+            self.gyro[AxisRef.Z.value] = values[YAPRGRef.GYRO_Z.value] * self.gyro_scale
         except:
             print("[WARN]: Can't read data")
 
@@ -127,7 +127,9 @@ if __name__ == "__main__":
     razor_imu.start()
     time.sleep(2)
     for t in range(1,20):
-        print(str(razor_imu.orient[AxisRef.X.value]))
-        time.sleep(0.2)
+        print("X: " + str(razor_imu.gyro[AxisRef.X.value]))
+        print("Y: " + str(razor_imu.gyro[AxisRef.Y.value]))
+        print("Z: " + str(razor_imu.gyro[AxisRef.Z.value]))
+        time.sleep(1)
     razor_imu.shutdown()
     print("All Good!")

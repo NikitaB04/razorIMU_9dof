@@ -8,7 +8,7 @@
 
 #### Serial Configuraton ####
 Serial:
-  device: "SparkFunRazor"
+  device: "SeeedXIAO"
   port: "/dev/ttyACM0"
   boundrate: 57600
   boot_time: 2
@@ -16,7 +16,7 @@ Serial:
 #### Units Configuraton ####
 Units:
   orin_scale: 1
-  acel_scale: 0.0383203
+  acel_scale: 1
   gyro_scale: 1
 
 #### Calibration Configuraton ####
@@ -68,29 +68,69 @@ Calib:
   
   SeeedXIAO:
     Val:
+      ### orin constant drift
+      orin_drift_x:  0
+      orin_drift_y:  0
+      orin_drift_z:  0
+
+      ### orin value scaling
+      orin_scale_x:  1
+      orin_scale_y:  1
+      orin_scale_z:  1 
+
+      ### acceleration constant drift
+      acel_drift_x:  0
+      acel_drift_y:  0
+      acel_drift_z:  0
+
+      ### acceleration value scaling
+      acel_scale_x:  1
+      acel_scale_y:  1
+      acel_scale_z:  1
+
       ### gyro constant drift
-      axis_drift_x: -0.9286
-      axis_drift_y:  2.5988
-      axis_drift_z:  0.4872
+      gyro_drift_x:  0
+      gyro_drift_y:  0
+      gyro_drift_z:  0
 
       ### gyro value scaling
-      axis_scale_x:  1.268
-      axis_scale_y:  1.286
-      axis_scale_z:  1.267 
+      gyro_scale_x:  1
+      gyro_scale_y:  1
+      gyro_scale_z:  1  
 
       ### serial post rate
       updates_rate:  20
 
     Cmd:
+      ### orin constant drift
+      orin_drift_x: '#codx'
+      orin_drift_y: '#cody'
+      orin_drift_z: '#codz'
+
+      ### orin value scaling
+      orin_scale_x: '#cosx'
+      orin_scale_y: '#cosy'
+      orin_scale_z: '#cosz' 
+
+      ### acceleration constant drift
+      acel_drift_x:  '#cadx'
+      acel_drift_y:  '#cady'
+      acel_drift_z:  '#cadz'
+
+      ### acceleration value scaling
+      acel_scale_x:  '#casx'
+      acel_scale_y:  '#casy'
+      acel_scale_z:  '#casz'
+
       ### gyro constant drift
-      axis_drift_x: '#cdx'
-      axis_drift_y: '#cdy'
-      axis_drift_z: '#cdz'
+      gyro_drift_x:  '#cgdx'
+      gyro_drift_y:  '#cgdy'
+      gyro_drift_z:  '#cgdz'
 
       ### gyro value scaling
-      axis_scale_x: '#csx'
-      axis_scale_y: '#csy'
-      axis_scale_z: '#csz' 
+      gyro_scale_x:  '#cgsx'
+      gyro_scale_y:  '#cgsy'
+      gyro_scale_z:  '#cgsz'
 
       ### serial post rate
       updates_rate: '#cu'
